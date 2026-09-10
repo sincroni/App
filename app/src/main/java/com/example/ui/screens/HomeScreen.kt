@@ -23,6 +23,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.ui.theme.*
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
+import androidx.compose.runtime.*
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.delay
 
 data class Vehicle(
     val id: String,
@@ -32,6 +36,7 @@ data class Vehicle(
     val status: String
 )
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
     isDarkTheme: Boolean,
@@ -47,6 +52,8 @@ fun HomeScreen(
         Vehicle("3", "Chevrolet Onix", "BCA4E56", Icons.Filled.DirectionsCar, "Em Manutenção")
     )
     val pagerState = rememberPagerState(pageCount = { vehicles.size })
+    var isRefreshing by remember { mutableStateOf(false) }
+    val coroutineScope = rememberCoroutineScope()
 
     Scaffold(
         floatingActionButton = {
@@ -61,11 +68,23 @@ fun HomeScreen(
         },
         floatingActionButtonPosition = FabPosition.Center
     ) { padding ->
-        Column(
+        PullToRefreshBox(
+            isRefreshing = isRefreshing,
+            onRefresh = {
+                coroutineScope.launch {
+                    isRefreshing = true
+                    // Simulando sincronização com o backend
+                    delay(1500)
+                    isRefreshing = false
+                }
+            },
             modifier = Modifier
                 .fillMaxSize()
                 .padding(padding)
         ) {
+            Column(
+                modifier = Modifier.fillMaxSize()
+            ) {
             Spacer(modifier = Modifier.height(32.dp))
             
             // Header
@@ -216,6 +235,7 @@ fun HomeScreen(
             }
         }
     }
+}
 }
 
 @Composable
