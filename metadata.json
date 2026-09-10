@@ -1,0 +1,6 @@
+{
+  "name": "SegurAuto",
+  "description": "Módulo de Registro de Sinistro e Recuperação Veicular em Tempo Real",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
