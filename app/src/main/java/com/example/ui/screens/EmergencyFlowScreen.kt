@@ -39,6 +39,12 @@ import androidx.compose.ui.unit.sp
 import com.example.utils.AudioRecorder
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import com.google.android.gms.maps.model.CameraPosition
+import com.google.android.gms.maps.model.LatLng
+import com.google.maps.android.compose.GoogleMap
+import com.google.maps.android.compose.Marker
+import com.google.maps.android.compose.MarkerState
+import com.google.maps.android.compose.rememberCameraPositionState
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -374,7 +380,7 @@ fun Step2(onConfirmEmergency: () -> Unit) {
         }
     }
 
-    Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
+    Column(modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
         Text("Passo 2 de 2", style = MaterialTheme.typography.labelMedium)
         Spacer(modifier = Modifier.height(8.dp))
         Text(
@@ -383,17 +389,40 @@ fun Step2(onConfirmEmergency: () -> Unit) {
         )
         Spacer(modifier = Modifier.height(16.dp))
         
-        // Mini map placeholder
+        val rioDeJaneiro = LatLng(-22.8793, -43.2425)
+        val cameraPositionState = rememberCameraPositionState {
+            position = CameraPosition.fromLatLngZoom(rioDeJaneiro, 15f)
+        }
+        
         Box(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(200.dp)
                 .clip(RoundedCornerShape(16.dp))
-                .background(MaterialTheme.colorScheme.surfaceVariant),
-            contentAlignment = Alignment.Center
         ) {
-            Icon(Icons.Filled.Map, contentDescription = "Mapa", modifier = Modifier.size(48.dp), tint = MaterialTheme.colorScheme.onSurfaceVariant)
-            Text("Av. Brasil, Rio de Janeiro - RJ", modifier = Modifier.align(Alignment.BottomCenter).padding(16.dp))
+            GoogleMap(
+                modifier = Modifier.fillMaxSize(),
+                cameraPositionState = cameraPositionState
+            ) {
+                Marker(
+                    state = MarkerState(position = rioDeJaneiro),
+                    title = "Local do Incidente",
+                    snippet = "Av. Brasil, Rio de Janeiro - RJ"
+                )
+            }
+            Surface(
+                color = MaterialTheme.colorScheme.surface.copy(alpha = 0.9f),
+                shape = RoundedCornerShape(8.dp),
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .padding(8.dp)
+            ) {
+                Text(
+                    "Av. Brasil, Rio de Janeiro - RJ", 
+                    modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
+                    style = MaterialTheme.typography.bodySmall.copy(fontWeight = FontWeight.Medium)
+                )
+            }
         }
 
         Spacer(modifier = Modifier.weight(1f))

@@ -21,6 +21,7 @@ android {
     versionName = "1.0"
 
     testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+    manifestPlaceholders["MAPS_API_KEY"] = System.getenv("MAPS_API_KEY") ?: "AIzaSyDummyKeyForGoogleMapsSDKInCompose"
   }
 
   signingConfigs {
@@ -121,6 +122,8 @@ dependencies {
   implementation(libs.okhttp)
   // implementation(libs.play.services.location)
   implementation(libs.retrofit)
+  implementation(libs.maps.compose)
+  implementation(libs.play.services.maps)
   testImplementation(libs.androidx.compose.ui.test.junit4)
   testImplementation(libs.androidx.core)
   testImplementation(libs.androidx.junit)
